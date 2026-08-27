@@ -66,6 +66,22 @@ The baseline deliberately favors discovery recall, then measures whether the sep
 improves precision by rejecting protected, unreachable, clean, and flaky candidates. Discovery
 inputs are allowlisted in `fixtures/corpus/cases.json`; `references/` is denied.
 
+Stage a verified patch through containment and promotion gates:
+
+```bash
+uv run --no-sync appsec-remediate --root . \
+  --profile fixed-sql --mode promote --approve \
+  --output artifacts/remediation-good.json
+uv run --no-sync appsec-remediate --root . \
+  --profile bad-sql --mode promote --approve \
+  --output artifacts/remediation-rollback.json
+```
+
+The first profile blocks the controlled exploit while preserving normal and authorized behavior.
+The second also blocks the exploit but breaks normal search, so the deterministic gate rolls it
+back. Advisory mode is the default, human approval is required for promotion, and GitHub writes
+remain disabled.
+
 See [docs/architecture.md](docs/architecture.md) for the intended component and trust
 boundaries.
 Executable local AppSec evaluation harness with independent verification, remediation gates, and replayable evidence

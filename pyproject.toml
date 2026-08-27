@@ -18,6 +18,7 @@ dependencies = [
 [project.scripts]
 appsec-harness-version = "appsec_harness:print_version"
 appsec-eval = "appsec_harness.eval.cli:main"
+appsec-remediate = "appsec_harness.remediation.cli:main"
 
 [dependency-groups]
 dev = [
