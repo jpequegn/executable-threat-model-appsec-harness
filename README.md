@@ -82,6 +82,22 @@ The second also blocks the exploit but breaks normal search, so the deterministi
 back. Advisory mode is the default, human approval is required for promotion, and GitHub writes
 remain disabled.
 
+Persist a completed evaluation and generate assurance artifacts:
+
+```bash
+uv run --no-sync appsec-report \
+  --database artifacts/evidence.duckdb \
+  --evaluation artifacts/evaluation.json \
+  --remediation artifacts/remediation-good.json \
+  --metadata fixtures/reporting/demo-metadata.json \
+  --output artifacts/assurance
+```
+
+The output includes `assurance.json`, `assurance.md`, and Parquet exports for runs, metrics,
+findings, defect attributions, and patches. Re-importing identical evidence is idempotent. Every
+metric exposes its numerator, denominator, unit, and measurement status; configuration summaries
+show sample count and observed range rather than implying causal certainty.
+
 See [docs/architecture.md](docs/architecture.md) for the intended component and trust
 boundaries.
 Executable local AppSec evaluation harness with independent verification, remediation gates, and replayable evidence

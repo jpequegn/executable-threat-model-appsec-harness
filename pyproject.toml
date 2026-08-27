@@ -11,6 +11,7 @@ requires-python = ">=3.12,<3.13"
 license = "MIT"
 authors = [{ name = "Julien Pequegnot" }]
 dependencies = [
+  "duckdb>=1.4,<2",
   "fastapi>=0.116,<1",
   "uvicorn>=0.35,<1",
 ]
@@ -19,6 +20,7 @@ dependencies = [
 appsec-harness-version = "appsec_harness:print_version"
 appsec-eval = "appsec_harness.eval.cli:main"
 appsec-remediate = "appsec_harness.remediation.cli:main"
+appsec-report = "appsec_harness.reporting.cli:main"
 
 [dependency-groups]
 dev = [
