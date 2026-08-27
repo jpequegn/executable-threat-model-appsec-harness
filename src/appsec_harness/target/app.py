@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict
 from pathlib import Path
-from typing import cast
+from typing import Literal, cast
 
 from fastapi import FastAPI, Header, HTTPException, Query
 
@@ -12,8 +12,15 @@ from appsec_harness.target.network_policy import NetworkPolicyError, require_loo
 from appsec_harness.target.redaction import SYNTHETIC_CANARY, redact
 from appsec_harness.target.store import OrderStore
 
+TargetProfile = Literal["vulnerable", "fixed-sql", "bad-sql"]
 
-def create_app(database_path: Path | None = None) -> FastAPI:
+
+def create_app(
+    database_path: Path | None = None,
+    *,
+    profile: TargetProfile = "vulnerable",
+    search_contained: bool = False,
+) -> FastAPI:
     path = database_path or Path("runs/target/orders.sqlite3")
     store = OrderStore(path)
     store.reset()
@@ -32,8 +39,16 @@ def create_app(database_path: Path | None = None) -> FastAPI:
 
     @app.get("/orders/search")
     def vulnerable_search(q: str = Query(max_length=80)) -> list[dict[str, object]]:
+        if search_contained:
+            raise HTTPException(status_code=503, detail="search temporarily contained")
         try:
-            return [asdict(order) for order in store.search_vulnerable(q)]
+            if profile == "fixed-sql":
+                orders = store.search_protected(q)
+            elif profile == "bad-sql":
+                orders = []
+            else:
+                orders = store.search_vulnerable(q)
+            return [asdict(order) for order in orders]
         except Exception as exc:
             raise HTTPException(status_code=400, detail="synthetic query rejected") from exc
 
