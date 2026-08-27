@@ -3,6 +3,7 @@
   "target": "synthetic-order-service",
   "discovery_inputs": [
     "src/appsec_harness/target/app.py",
+    "src/appsec_harness/target/dead_code.py",
     "src/appsec_harness/target/store.py",
     "fixtures/threat-models/order-service-v1.json"
   ],
