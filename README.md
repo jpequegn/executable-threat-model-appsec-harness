@@ -55,6 +55,17 @@ Each accepted transition appends a sanitized, digest-verified receipt. Invalid t
 budget exhaustion, conflicting idempotency keys, and remediation without independent proof fail
 before the receipt log is mutated.
 
+Run the credential-free discovery and independent-verification baseline:
+
+```bash
+make sync
+uv run --no-sync appsec-eval --root . --output artifacts/evaluation.json
+```
+
+The baseline deliberately favors discovery recall, then measures whether the separate verifier
+improves precision by rejecting protected, unreachable, clean, and flaky candidates. Discovery
+inputs are allowlisted in `fixtures/corpus/cases.json`; `references/` is denied.
+
 See [docs/architecture.md](docs/architecture.md) for the intended component and trust
 boundaries.
 Executable local AppSec evaluation harness with independent verification, remediation gates, and replayable evidence

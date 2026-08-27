@@ -1,21 +1,21 @@
 .PHONY: sync format lint test check
 
 sync:
-	uv sync --frozen --all-groups
+	uv sync --frozen --all-groups --no-editable
 
 format:
 	gofmt -w $$(find cmd internal -name '*.go')
-	uv run ruff format .
+	uv run --no-sync ruff format .
 
 lint:
 	test -z "$$(gofmt -l $$(find cmd internal -name '*.go'))"
 	go vet ./...
-	uv run ruff check .
-	uv run ruff format --check .
-	uv run mypy
+	uv run --no-sync ruff check .
+	uv run --no-sync ruff format --check .
+	uv run --no-sync mypy
 
 test:
 	go test ./...
-	uv run pytest
+	uv run --no-sync pytest
 
 check: lint test

@@ -22,5 +22,5 @@ jobs:
         with:
           enable-cache: true
       - run: uv python install 3.12
-      - run: uv sync --frozen --all-groups
+      - run: uv sync --frozen --all-groups --no-editable
       - run: make check
