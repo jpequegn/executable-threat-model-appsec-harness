@@ -33,6 +33,7 @@ packages = ["src/appsec_harness"]
 [tool.pytest.ini_options]
 addopts = "--strict-config --strict-markers -q"
 testpaths = ["tests"]
+pythonpath = ["src"]
 
 [tool.coverage.run]
 branch = true
