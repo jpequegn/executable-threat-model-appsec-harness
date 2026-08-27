@@ -1,0 +1,18 @@
+services:
+  synthetic-target:
+    build:
+      context: .
+    read_only: true
+    tmpfs:
+      - /app/runs:size=64m,mode=0700,uid=10001,gid=10001
+      - /tmp:size=32m,mode=0700,uid=10001,gid=10001
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - appsec-internal
+
+networks:
+  appsec-internal:
+    internal: true

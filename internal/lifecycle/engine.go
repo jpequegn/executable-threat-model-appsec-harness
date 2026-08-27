@@ -117,6 +117,9 @@ func (engine *Engine) Execute(trialID string, request StepRequest) (Receipt, err
 	if requiresVerifiedFinding(request.State) && len(request.VerifiedFindingIDs) == 0 {
 		return Receipt{}, fmt.Errorf("state %s requires at least one independently verified finding", request.State)
 	}
+	if err := validateDecisionEvidence(request.State, request.Evidence); err != nil {
+		return Receipt{}, err
+	}
 	cumulative := snapshot.Usage.Add(request.Usage)
 	if err := snapshot.Manifest.Budget.Check(cumulative); err != nil {
 		return Receipt{}, err
@@ -144,6 +147,35 @@ func (engine *Engine) Execute(trialID string, request StepRequest) (Receipt, err
 		return Receipt{}, err
 	}
 	return receipt, nil
+}
+
+func validateDecisionEvidence(state State, evidence map[string]any) error {
+	if state == StatePromoteOrRollback {
+		action, _ := evidence["action"].(string)
+		switch action {
+		case "promoted":
+			gates, _ := evidence["all_gates_passed"].(bool)
+			approved, _ := evidence["human_approved"].(bool)
+			if !gates || !approved {
+				return fmt.Errorf("promotion requires passing gates and explicit human approval")
+			}
+		case "rolled_back":
+			preserved, _ := evidence["rollback_preserved_evidence"].(bool)
+			if !preserved {
+				return fmt.Errorf("rollback must preserve evidence")
+			}
+		case "advisory", "staged":
+		default:
+			return fmt.Errorf("promotion decision action is required")
+		}
+	}
+	if state == StateReport {
+		digest, _ := evidence["assurance_digest"].(string)
+		if !strings.HasPrefix(digest, "sha256:") {
+			return fmt.Errorf("report requires an assurance digest")
+		}
+	}
+	return nil
 }
 
 func (engine *Engine) Load(trialID string) (Snapshot, error) {

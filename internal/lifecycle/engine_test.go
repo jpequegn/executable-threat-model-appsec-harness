@@ -51,6 +51,37 @@ func TestLifecycleRejectsInvalidTransitionsAndUnverifiedRemediation(t *testing.T
 	advance(t, engine, "gated", StateContain, []string{"finding-1"})
 }
 
+func TestPromotionAndReportEvidenceFailClosed(t *testing.T) {
+	engine := initializedEngine(t, "decision-gates")
+	verified := []string{"finding-1"}
+	for _, state := range []State{
+		StatePrepare,
+		StateDiscover,
+		StateVerify,
+		StateTriage,
+		StateContain,
+		StatePatch,
+		StateRegress,
+		StateStage,
+	} {
+		advance(t, engine, "decision-gates", state, verified)
+	}
+	promotion := request(StatePromoteOrRollback, "bad-promotion", verified)
+	promotion.Evidence = map[string]any{"action": "promoted", "all_gates_passed": true}
+	if _, err := engine.Execute("decision-gates", promotion); err == nil || !strings.Contains(err.Error(), "human approval") {
+		t.Fatalf("expected approval gate, got %v", err)
+	}
+	promotion.IdempotencyKey = "good-promotion"
+	promotion.Evidence["human_approved"] = true
+	if _, err := engine.Execute("decision-gates", promotion); err != nil {
+		t.Fatal(err)
+	}
+	report := request(StateReport, "missing-report-digest", nil)
+	if _, err := engine.Execute("decision-gates", report); err == nil || !strings.Contains(err.Error(), "assurance digest") {
+		t.Fatalf("expected report digest gate, got %v", err)
+	}
+}
+
 func TestBudgetsFailClosed(t *testing.T) {
 	engine := initializedEngine(t, "budget")
 	request := request(StatePrepare, "over-budget", nil)

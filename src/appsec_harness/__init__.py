@@ -1,6 +1,6 @@
 """Python support package for the executable AppSec harness."""
 
-__version__ = "0.1.0-dev"
+__version__ = "0.1.0"
 
 
 def print_version() -> None:
