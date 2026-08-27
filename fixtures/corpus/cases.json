@@ -1,0 +1,20 @@
+{
+  "schema_version": "appsec-harness.dev/v1",
+  "target": "synthetic-order-service",
+  "discovery_inputs": [
+    "src/appsec_harness/target/app.py",
+    "src/appsec_harness/target/store.py",
+    "fixtures/threat-models/order-service-v1.json"
+  ],
+  "denied_discovery_paths": ["references/"],
+  "cases": [
+    {"id": "sql-injection", "kind": "seeded", "entry_point": "GET /orders/search"},
+    {"id": "authorization-state-mismatch", "kind": "seeded", "entry_point": "POST /orders/1/approve"},
+    {"id": "protected-search", "kind": "protected-control", "entry_point": "GET /orders/protected-search"},
+    {"id": "protected-approval", "kind": "protected-control", "entry_point": "POST /orders/1/protected-approve"},
+    {"id": "unreachable-debug-query", "kind": "unreachable-control", "entry_point": null},
+    {"id": "clean-health", "kind": "clean-control", "entry_point": "GET /health"},
+    {"id": "loopback-outbound", "kind": "egress-control", "entry_point": "GET /outbound-preview"},
+    {"id": "secret-canary", "kind": "redaction-control", "entry_point": null}
+  ]
+}

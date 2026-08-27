@@ -10,13 +10,17 @@ readme = "README.md"
 requires-python = ">=3.12,<3.13"
 license = "MIT"
 authors = [{ name = "Julien Pequegnot" }]
-dependencies = []
+dependencies = [
+  "fastapi>=0.116,<1",
+  "uvicorn>=0.35,<1",
+]
 
 [project.scripts]
 appsec-harness-version = "appsec_harness:print_version"
 
 [dependency-groups]
 dev = [
+  "httpx>=0.28,<1",
   "mypy>=1.17,<2",
   "pytest>=8.4,<10",
   "pytest-cov>=6.2,<8",

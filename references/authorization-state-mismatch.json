@@ -1,0 +1,7 @@
+{
+  "case_id": "authorization-state-mismatch",
+  "expected_status": "confirmed",
+  "proof": "A buyer can transition their own pending order to approved through the unprotected route.",
+  "fix": "Require the approver role and reject owner self-approval.",
+  "remediation_invariant": "Only a distinct approver may approve a pending synthetic order."
+}

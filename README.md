@@ -31,6 +31,15 @@ go run ./cmd/appsec-harness version
 uv run appsec-harness-version
 ```
 
+Run the synthetic target locally:
+
+```bash
+uv run uvicorn appsec_harness.target.app:create_app --factory --host 127.0.0.1 --port 8080
+```
+
+Only loopback interfaces and synthetic data are supported. The controlled vulnerable routes
+exist solely so the harness can measure discovery and independent verification behavior.
+
 See [docs/architecture.md](docs/architecture.md) for the intended component and trust
 boundaries.
 Executable local AppSec evaluation harness with independent verification, remediation gates, and replayable evidence
