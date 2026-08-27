@@ -1,0 +1,10 @@
+{
+  "config_id": "deterministic-baseline-v1",
+  "harness_version": "0.1.0",
+  "evidence_date": "2026-08-27",
+  "as_of_date": "2026-08-27",
+  "reviewer_minutes": 8,
+  "cost_micros": 0,
+  "duration_ms": 250,
+  "notes": "Credential-free deterministic baseline with synthetic virtual duration."
+}
