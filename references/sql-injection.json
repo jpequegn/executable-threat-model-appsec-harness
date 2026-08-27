@@ -1,0 +1,7 @@
+{
+  "case_id": "sql-injection",
+  "expected_status": "confirmed",
+  "proof": "A literal unmatched query returns no rows, while a controlled boolean expression changes the result count.",
+  "fix": "Use a bound parameter for the search term.",
+  "remediation_invariant": "Search results must match the literal user query and normal searches must keep working."
+}
