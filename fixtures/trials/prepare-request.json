@@ -1,0 +1,14 @@
+{
+  "state": "PREPARE",
+  "idempotency_key": "demo-good-patch:prepare:v1",
+  "usage": {
+    "duration_ms": 10,
+    "tool_calls": 0,
+    "cost_micros": 0
+  },
+  "verified_finding_ids": [],
+  "evidence": {
+    "workspace": "created",
+    "network": "local-only"
+  }
+}

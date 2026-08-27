@@ -40,6 +40,21 @@ uv run uvicorn appsec_harness.target.app:create_app --factory --host 127.0.0.1 -
 Only loopback interfaces and synthetic data are supported. The controlled vulnerable routes
 exist solely so the harness can measure discovery and independent verification behavior.
 
+Initialize and inspect a deterministic trial workspace:
+
+```bash
+go run ./cmd/appsec-harness trial init \
+  --root runs --manifest fixtures/trials/demo-manifest.json
+go run ./cmd/appsec-harness trial step \
+  --root runs --trial demo-good-patch --request fixtures/trials/prepare-request.json
+go run ./cmd/appsec-harness trial status \
+  --root runs --trial demo-good-patch
+```
+
+Each accepted transition appends a sanitized, digest-verified receipt. Invalid transitions,
+budget exhaustion, conflicting idempotency keys, and remediation without independent proof fail
+before the receipt log is mutated.
+
 See [docs/architecture.md](docs/architecture.md) for the intended component and trust
 boundaries.
 Executable local AppSec evaluation harness with independent verification, remediation gates, and replayable evidence

@@ -1,0 +1,12 @@
+{
+  "schema_version": "appsec-harness.dev/lifecycle/v1",
+  "trial_id": "demo-good-patch",
+  "target": "synthetic-order-service",
+  "threat_model_digest": "sha256:769fe2152a82157489ac29d354b90025bc745574890153bd57b64874d5fbf68f",
+  "budget": {
+    "max_duration_ms": 60000,
+    "max_tool_calls": 50,
+    "max_cost_micros": 1000000
+  },
+  "network_policy": "local-only"
+}
