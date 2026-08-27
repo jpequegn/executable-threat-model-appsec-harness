@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appsec-harness.dev/schemas/v1/triage-decision.schema.json",
+  "title": "Triage Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "finding_id", "proof_id", "asset_sensitivity", "reachability", "tenant_scope", "preconditions", "control_evidence", "unknowns", "severity", "priority", "reviewer_status"],
+  "properties": {
+    "schema_version": {"const": "appsec-harness.dev/v1"},
+    "finding_id": {"type": "string", "minLength": 1},
+    "proof_id": {"type": "string", "minLength": 1},
+    "asset_sensitivity": {"type": "string", "minLength": 1},
+    "reachability": {"type": "string", "minLength": 1},
+    "tenant_scope": {"type": "string", "minLength": 1},
+    "preconditions": {"type": "array", "items": {"type": "string"}},
+    "control_evidence": {"type": "array", "items": {"type": "string"}},
+    "unknowns": {"type": "array", "items": {"type": "string"}},
+    "severity": {"enum": ["low", "medium", "high", "critical", "unknown"]},
+    "priority": {"type": "integer", "minimum": 0},
+    "reviewer_status": {"enum": ["unreviewed", "approved", "rejected", "disputed"]}
+  }
+}

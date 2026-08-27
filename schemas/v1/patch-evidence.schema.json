@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appsec-harness.dev/schemas/v1/patch-evidence.schema.json",
+  "title": "Patch Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "finding_id", "proof_id", "patch_digest", "rationale", "exploit_regression", "functional_tests", "negative_tests", "policy_decision", "reviewer_status", "remaining_risk", "rollback_instructions", "evidence"],
+  "properties": {
+    "schema_version": {"const": "appsec-harness.dev/v1"},
+    "finding_id": {"type": "string", "minLength": 1},
+    "proof_id": {"type": "string", "minLength": 1},
+    "patch_digest": {"type": "string", "pattern": "^sha256:"},
+    "rationale": {"type": "string", "minLength": 1},
+    "exploit_regression": {"type": "boolean"},
+    "functional_tests": {"type": "boolean"},
+    "negative_tests": {"type": "boolean"},
+    "policy_decision": {"enum": ["advisory", "stage", "promote", "rollback"]},
+    "reviewer_status": {"enum": ["unreviewed", "approved", "rejected"]},
+    "remaining_risk": {"type": "string"},
+    "rollback_instructions": {"type": "string", "minLength": 1},
+    "evidence": {"type": "array", "items": {"type": "object"}}
+  }
+}
