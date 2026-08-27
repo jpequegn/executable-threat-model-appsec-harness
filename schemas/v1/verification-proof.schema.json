@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appsec-harness.dev/schemas/v1/verification-proof.schema.json",
+  "title": "Verification Proof",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "finding_id", "environment_id", "verifier_adapter", "verifier_input_digest", "discovery_input_digest", "status", "reason_code", "observed", "expected", "checks"],
+  "properties": {
+    "schema_version": {"const": "appsec-harness.dev/v1"},
+    "id": {"type": "string", "minLength": 1},
+    "finding_id": {"type": "string", "minLength": 1},
+    "environment_id": {"type": "string", "minLength": 1},
+    "verifier_adapter": {"type": "string", "minLength": 1},
+    "verifier_input_digest": {"type": "string", "pattern": "^sha256:"},
+    "discovery_input_digest": {"type": "string", "pattern": "^sha256:"},
+    "status": {"enum": ["confirmed", "rejected", "flaky"]},
+    "reason_code": {"type": "string", "minLength": 1},
+    "observed": {"type": "string"},
+    "expected": {"type": "string"},
+    "artifact_digest": {"type": "string", "pattern": "^sha256:"},
+    "checks": {"type": "array", "items": {"type": "object"}}
+  }
+}

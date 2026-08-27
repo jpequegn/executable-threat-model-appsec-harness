@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appsec-harness.dev/schemas/v1/trial-report.schema.json",
+  "title": "Trial Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "trial_id", "manifest_digest", "metrics", "artifacts"],
+  "properties": {
+    "schema_version": {"const": "appsec-harness.dev/v1"},
+    "trial_id": {"type": "string", "minLength": 1},
+    "manifest_digest": {"type": "string", "pattern": "^sha256:"},
+    "metrics": {"type": "object"},
+    "artifacts": {"type": "array", "items": {"type": "object"}}
+  }
+}

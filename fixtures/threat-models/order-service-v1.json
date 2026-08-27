@@ -1,0 +1,112 @@
+{
+  "schema_version": "appsec-harness.dev/v1",
+  "id": "synthetic-order-service",
+  "version": "1.0.0",
+  "owner": "appsec-harness",
+  "review_date": "2026-08-27",
+  "evidence_sources": [
+    {
+      "id": "architecture",
+      "kind": "document",
+      "uri": "repo://docs/architecture.md"
+    }
+  ],
+  "assets": [
+    {
+      "id": "orders",
+      "name": "Synthetic order records",
+      "classification": "synthetic-confidential"
+    },
+    {
+      "id": "approval-state",
+      "name": "Synthetic approval state",
+      "classification": "synthetic-internal"
+    }
+  ],
+  "identities": [
+    {
+      "id": "buyer-a",
+      "roles": ["buyer"]
+    },
+    {
+      "id": "approver-a",
+      "roles": ["approver"]
+    }
+  ],
+  "trust_boundaries": [
+    {
+      "id": "http-api",
+      "name": "Loopback HTTP API",
+      "description": "Synthetic requests enter through a loopback-only listener."
+    },
+    {
+      "id": "sqlite-store",
+      "name": "Disposable SQLite store",
+      "description": "Each trial receives a resettable local database."
+    }
+  ],
+  "entry_points": [
+    {
+      "id": "search-orders",
+      "method": "GET",
+      "path": "/orders/search",
+      "boundary_id": "http-api"
+    },
+    {
+      "id": "approve-order",
+      "method": "POST",
+      "path": "/orders/{order_id}/approve",
+      "boundary_id": "http-api"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "mock-tax",
+      "name": "Loopback tax service",
+      "endpoint": "http://127.0.0.1:8081",
+      "local": true
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "synthetic-only",
+      "text": "All identities and order data are synthetic.",
+      "evidence": "repo://fixtures"
+    },
+    {
+      "id": "no-egress",
+      "text": "The target cannot reach non-loopback addresses.",
+      "evidence": "policy://network/local-only"
+    }
+  ],
+  "controls": [
+    {
+      "id": "parameterized-search",
+      "description": "Search terms are passed as SQL parameters in the protected endpoint.",
+      "asset_ids": ["orders"],
+      "evidence": "test://protected-search"
+    },
+    {
+      "id": "approval-role-check",
+      "description": "Only an approver may approve an order owned by another buyer.",
+      "asset_ids": ["approval-state"],
+      "evidence": "test://approval-policy"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "order-query-bounded",
+      "description": "A search result contains only records matching the literal query.",
+      "asset_ids": ["orders"],
+      "control_ids": ["parameterized-search"],
+      "kind": "required"
+    },
+    {
+      "id": "buyer-cannot-self-approve",
+      "description": "A buyer cannot approve an order they own.",
+      "asset_ids": ["approval-state"],
+      "control_ids": ["approval-role-check"],
+      "kind": "prohibited"
+    }
+  ]
+}
