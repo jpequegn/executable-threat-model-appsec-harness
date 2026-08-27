@@ -34,10 +34,10 @@ def run_remediation(
         raise ValueError("the MVP patch adapter supports only the verified SQL injection fixture")
     if profile not in {"fixed-sql", "bad-sql"}:
         raise ValueError("unsupported patch profile")
-    containment = _contain(finding)
-    patch = _package_patch(finding, proof, profile, policy)
-    gates = _stage(patch, policy)
-    promotion = _decide(gates, policy)
+    containment = contain(finding)
+    patch = package_patch(finding, proof, profile, policy)
+    gates = stage(patch, policy)
+    promotion = decide(gates, policy)
     return RemediationRun(
         triage=decision,
         containment=containment,
@@ -47,7 +47,7 @@ def run_remediation(
     )
 
 
-def _contain(finding: Finding) -> ContainmentEvidence:
+def contain(finding: Finding) -> ContainmentEvidence:
     with TemporaryDirectory(prefix="appsec-containment-") as directory:
         return _contain_in_directory(finding, Path(directory))
 
@@ -69,7 +69,7 @@ def _contain_in_directory(finding: Finding, directory: Path) -> ContainmentEvide
     )
 
 
-def _package_patch(
+def package_patch(
     finding: Finding,
     proof: VerificationProof,
     profile: PatchProfile,
@@ -101,7 +101,7 @@ def _package_patch(
     )
 
 
-def _stage(patch: PatchCandidate, policy: RemediationPolicy) -> StageGateResults:
+def stage(patch: PatchCandidate, policy: RemediationPolicy) -> StageGateResults:
     with (
         TemporaryDirectory(prefix="appsec-stage-") as directory,
         TestClient(create_app(Path(directory) / "orders.sqlite3", profile=patch.profile)) as client,
@@ -134,7 +134,7 @@ def _stage(patch: PatchCandidate, policy: RemediationPolicy) -> StageGateResults
     )
 
 
-def _decide(gates: StageGateResults, policy: RemediationPolicy) -> PromotionDecision:
+def decide(gates: StageGateResults, policy: RemediationPolicy) -> PromotionDecision:
     if not gates.passed:
         return PromotionDecision(
             action="rolled_back",

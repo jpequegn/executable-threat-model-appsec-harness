@@ -1,4 +1,4 @@
-.PHONY: sync format lint test check
+.PHONY: sync format lint test check release-check
 
 sync:
 	uv sync --frozen --all-groups --no-editable
@@ -19,3 +19,6 @@ test:
 	uv run --no-sync pytest
 
 check: lint test
+
+release-check:
+	uv run --no-sync python scripts/release_gate.py

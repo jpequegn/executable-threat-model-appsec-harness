@@ -6,7 +6,12 @@ from pathlib import Path
 
 from appsec_harness.eval.context import build_discovery_context
 from appsec_harness.eval.discovery import discover
-from appsec_harness.eval.models import EvaluationMetrics, EvaluationRun
+from appsec_harness.eval.models import (
+    DiscoveryRun,
+    EvaluationMetrics,
+    EvaluationRun,
+    VerificationResult,
+)
 from appsec_harness.eval.verifier import verify
 
 SEEDED_CASES = {"sql-injection", "authorization-state-mismatch"}
@@ -16,6 +21,14 @@ def run_evaluation(root: Path, trial_id: str = "deterministic-baseline") -> Eval
     context = build_discovery_context(root)
     discovery = discover(context, trial_id)
     verification = [verify(finding, discovery.input_digest) for finding in discovery.findings]
+    return assemble_evaluation(trial_id, discovery, verification)
+
+
+def assemble_evaluation(
+    trial_id: str,
+    discovery: DiscoveryRun,
+    verification: list[VerificationResult],
+) -> EvaluationRun:
     candidate_ids = {finding.id for finding in discovery.findings}
     confirmed_ids = {
         result.proof.finding_id for result in verification if result.proof.status == "confirmed"

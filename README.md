@@ -12,8 +12,21 @@ patching, staging, or promotion.
 
 ## Status
 
-The project is being implemented from
+Version 0.1.0 implements
 [`jpequegn/project-ideas#184`](https://github.com/jpequegn/project-ideas/issues/184).
+
+## Quick demo
+
+```bash
+make sync
+uv run --no-sync appsec-demo \
+  --root . --output artifacts/demo --profile fixed-sql --approve
+```
+
+This credential-free command runs the complete Go-authorized lifecycle, writes independent
+discovery and verification evidence, promotes the passing synthetic patch, stores results in
+DuckDB and Parquet, and emits a permanent regression case. See the
+[operator guide](docs/operator-guide.md) for the rollback scenario and evidence queries.
 
 ## Development
 
@@ -28,13 +41,13 @@ Run the initial command-line smoke check:
 
 ```bash
 go run ./cmd/appsec-harness version
-uv run appsec-harness-version
+uv run --no-sync appsec-harness-version
 ```
 
 Run the synthetic target locally:
 
 ```bash
-uv run uvicorn appsec_harness.target.app:create_app --factory --host 127.0.0.1 --port 8080
+uv run --no-sync uvicorn appsec_harness.target.app:create_app --factory --host 127.0.0.1 --port 8080
 ```
 
 Only loopback interfaces and synthetic data are supported. The controlled vulnerable routes
@@ -99,5 +112,5 @@ metric exposes its numerator, denominator, unit, and measurement status; configu
 show sample count and observed range rather than implying causal certainty.
 
 See [docs/architecture.md](docs/architecture.md) for the intended component and trust
-boundaries.
-Executable local AppSec evaluation harness with independent verification, remediation gates, and replayable evidence
+boundaries, [docs/operator-guide.md](docs/operator-guide.md) for operation, and
+[docs/extensions.md](docs/extensions.md) for extension paths.

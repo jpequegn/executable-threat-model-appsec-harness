@@ -21,10 +21,11 @@ appsec-harness-version = "appsec_harness:print_version"
 appsec-eval = "appsec_harness.eval.cli:main"
 appsec-remediate = "appsec_harness.remediation.cli:main"
 appsec-report = "appsec_harness.reporting.cli:main"
+appsec-demo = "appsec_harness.demo:main"
 
 [dependency-groups]
 dev = [
-  "httpx>=0.28,<1",
+  "httpx2>=2.12,<3",
   "mypy>=1.17,<2",
   "pytest>=8.4,<10",
   "pytest-cov>=6.2,<8",
@@ -42,6 +43,7 @@ pythonpath = ["src"]
 [tool.coverage.run]
 branch = true
 source = ["appsec_harness"]
+omit = ["*/cli.py"]
 
 [tool.coverage.report]
 fail_under = 85

@@ -1,0 +1,16 @@
+{
+  "discovery_recall": 1.0,
+  "final_state": "REPORT",
+  "precision_after_verification": 1.0,
+  "precision_before_verification": 0.333333,
+  "profile": "fixed-sql",
+  "promotion_action": "promoted",
+  "promotion_reason": "ALL_GATES_APPROVED",
+  "regression_case": "regressions/sql-injection.json",
+  "schema_version": "appsec-harness.dev/demo/v1",
+  "trial_id": "appsec-demo",
+  "verified_findings": [
+    "authorization-state-mismatch",
+    "sql-injection"
+  ]
+}
